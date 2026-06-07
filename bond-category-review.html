@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Category Review — Best-of-Bond Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c0c0d;
+    --paper:#ece7da;
+    --paper-2:#e2dccb;
+    --gold:#c9a227;
+    --gold-soft:#b8932a;
+    --red:#8b1e1e;
+    --line:#3a3733;
+    --muted:#6e6a60;
+    --field:#f5f1e6;
+    --shadow:0 18px 40px -20px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);color:var(--ink);
+    font-family:'Spectral',Georgia,serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none;
+  }
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{
+    max-width:980px;margin:0 auto;background:var(--paper);min-height:100vh;
+    background-image:radial-gradient(circle at 50% 0%,rgba(201,162,39,.08),transparent 60%);
+    box-shadow:0 0 80px rgba(0,0,0,.6);
+  }
+  header{
+    position:relative;padding:44px 40px 34px;border-bottom:2px solid var(--line);
+    background:linear-gradient(180deg,#111 0%,#191712 100%);color:var(--paper);overflow:hidden;
+  }
+  .barcode{
+    position:absolute;top:0;right:0;height:100%;width:90px;opacity:.18;
+    background:repeating-linear-gradient(90deg,var(--paper) 0 2px,transparent 2px 5px,var(--paper) 5px 6px,transparent 6px 11px);
+  }
+  .kicker{font-family:'Oswald',sans-serif;letter-spacing:.42em;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:500;margin:0 0 14px;}
+  h1{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;line-height:.92;margin:0;font-size:clamp(34px,6.5vw,64px);}
+  h1 .mute{color:var(--gold);}
+  .subhead{font-family:'Spectral',serif;font-style:italic;color:#cfc8b6;margin:16px 0 0;max-width:620px;line-height:1.5;font-size:17px;}
+  .clearance{margin-top:22px;display:inline-flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#9a9484;border:1px solid #4a463d;padding:7px 14px;border-radius:2px;}
+  .clearance b{color:var(--paper);font-weight:500;}
+
+  .status{
+    position:sticky;top:0;z-index:50;background:rgba(20,18,14,.96);backdrop-filter:blur(8px);
+    color:var(--paper);border-bottom:1px solid var(--line);padding:14px 40px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  }
+  .status .lbl{font-family:'Oswald',sans-serif;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:#bdb6a4;white-space:nowrap;}
+  .status .lbl b{color:var(--gold);font-weight:600;}
+  .track{flex:1;min-width:160px;height:6px;background:#3a3631;border-radius:3px;overflow:hidden;}
+  .track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-soft),var(--gold));transition:width .4s ease;}
+  .saved{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#7e9a6a;opacity:0;transition:opacity .3s;white-space:nowrap;}
+  .saved.show{opacity:1;}
+
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;padding:22px 40px;background:var(--paper-2);border-bottom:1px solid rgba(58,55,51,.25);}
+  .btn{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--line);background:transparent;color:var(--ink);padding:14px 22px;border-radius:2px;transition:all .18s ease;min-height:52px;display:inline-flex;align-items:center;gap:9px;}
+  .btn:hover,.btn:active{background:var(--ink);color:var(--paper);}
+  .btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .btn.primary:hover,.btn.primary:active{background:var(--gold-soft);border-color:var(--gold-soft);color:#1a1812;}
+  .btn.danger{border-color:#9a4a3a;color:#7d2c1e;}
+  .btn.danger:hover{background:#7d2c1e;color:var(--paper);}
+
+  .intro{padding:26px 40px 8px;}
+  .intro p{font-size:16px;line-height:1.6;color:#33302a;margin:0 0 12px;max-width:680px;}
+  .namefield{margin:18px 0 6px;max-width:420px;}
+  .namefield label{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:12px;color:var(--muted);display:block;margin-bottom:9px;}
+  .namefield label .req{color:var(--red);}
+  .namefield input{width:100%;background:var(--field);border:1px solid #cdc6b4;border-radius:3px;padding:15px 16px;font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.03em;font-size:16px;color:var(--ink);min-height:54px;}
+  .namefield input:focus{outline:none;border-color:var(--gold-soft);box-shadow:0 0 0 3px rgba(201,162,39,.18);}
+  .namefield input.missing{border-color:var(--red);box-shadow:0 0 0 3px rgba(139,30,30,.15);}
+  .intro .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+  .intro .legend span b{color:var(--ink);}
+
+  .section-label{
+    font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.26em;font-size:12px;color:var(--gold-soft);
+    padding:30px 40px 4px;display:flex;align-items:center;gap:14px;
+  }
+  .section-label::after{content:"";flex:1;height:1px;background:#cdc6b4;}
+
+  .cats{padding:8px 40px 10px;}
+  .cat{
+    border:1px solid #cfc8b6;border-radius:4px;margin:14px 0;background:var(--field);
+    box-shadow:var(--shadow);padding:18px 20px 20px;
+  }
+  .cat-top{display:flex;align-items:baseline;gap:14px;margin-bottom:4px;}
+  .cat-num{font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;color:var(--gold-soft);width:30px;flex:none;}
+  .cat-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:clamp(16px,2.4vw,20px);color:var(--ink);flex:1;line-height:1.15;}
+  .cat-hint{font-family:'Spectral',serif;font-style:italic;color:var(--muted);font-size:14px;margin:2px 0 14px 44px;}
+
+  .scale{display:flex;gap:8px;margin-left:44px;flex-wrap:wrap;}
+  .pip{
+    flex:1;min-width:46px;min-height:54px;border:1.5px solid #cdc6b4;background:#fffdf7;border-radius:3px;
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;color:var(--muted);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:all .15s ease;user-select:none;
+  }
+  .pip:hover{border-color:var(--gold-soft);color:var(--ink);}
+  .pip.sel{background:var(--ink);color:var(--gold);border-color:var(--ink);transform:translateY(-2px);box-shadow:0 6px 14px -6px rgba(0,0,0,.5);}
+  .scale-ends{display:flex;justify-content:space-between;margin:8px 0 0 44px;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9a9484;}
+
+  .catnote{
+    width:calc(100% - 44px);margin:14px 0 0 44px;min-height:0;height:46px;resize:vertical;
+    background:#fffdf7;border:1px solid #cdc6b4;border-radius:3px;padding:12px 14px;
+    font-family:'Spectral',serif;font-size:15px;color:var(--ink);line-height:1.5;transition:height .2s;
+  }
+  .catnote:focus{outline:none;border-color:var(--gold-soft);box-shadow:0 0 0 3px rgba(201,162,39,.18);height:80px;}
+  .catnote::placeholder{color:#a39d8c;font-style:italic;}
+
+  /* SUGGESTIONS */
+  .suggest{padding:8px 40px 20px;}
+  .srow{
+    display:grid;grid-template-columns:1fr 200px 46px;gap:12px;align-items:start;
+    border:1px solid #cfc8b6;border-radius:4px;margin:12px 0;background:var(--field);padding:16px 18px;
+    box-shadow:var(--shadow);animation:slidein .28s ease;
+  }
+  @keyframes slidein{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
+  .srow.ghost{opacity:.72;border-style:dashed;background:transparent;box-shadow:none;}
+  .srow label{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;}
+  .srow input,.srow textarea{
+    width:100%;background:#fffdf7;border:1px solid #cdc6b4;border-radius:3px;padding:13px 14px;
+    font-family:'Spectral',serif;font-size:16px;color:var(--ink);min-height:50px;
+  }
+  .srow .sname input{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:15px;}
+  .srow textarea{resize:vertical;line-height:1.45;min-height:50px;}
+  .srow input:focus,.srow textarea:focus{outline:none;border-color:var(--gold-soft);box-shadow:0 0 0 3px rgba(201,162,39,.18);}
+  .srow input::placeholder,.srow textarea::placeholder{color:#a39d8c;font-style:italic;}
+  .spri{font-family:'Oswald',sans-serif;}
+  .spri select{
+    width:100%;-webkit-appearance:none;appearance:none;background:#fffdf7;border:1px solid #cdc6b4;border-radius:3px;
+    padding:13px 36px 13px 14px;font-family:'Oswald',sans-serif;font-weight:500;font-size:14px;letter-spacing:.04em;color:var(--ink);
+    cursor:pointer;min-height:50px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e6a60' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .spri select:focus{outline:none;border-color:var(--gold-soft);}
+  .sdel{
+    border:1.5px solid #cdc6b4;background:#fffdf7;border-radius:3px;min-height:50px;width:46px;cursor:pointer;
+    font-size:18px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .15s;align-self:flex-end;
+  }
+  .sdel:hover{background:#7d2c1e;color:var(--paper);border-color:#7d2c1e;}
+  .ghost .sdel{visibility:hidden;}
+  .add-hint{font-family:'Spectral',serif;font-style:italic;color:var(--muted);font-size:14px;text-align:center;padding:6px 0 0;}
+
+  /* MODAL */
+  .modal-bg{position:fixed;inset:0;background:rgba(12,12,13,.82);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
+  .modal-bg.show{display:flex;}
+  .modal{background:var(--paper);max-width:720px;width:100%;max-height:88vh;display:flex;flex-direction:column;border-radius:5px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.7);overflow:hidden;}
+  .modal-head{padding:22px 26px;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:center;gap:16px;}
+  .modal-head h2{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:19px;margin:0;font-weight:600;}
+  .modal-head h2 span{color:var(--gold);}
+  .x{font-family:'Oswald',sans-serif;font-size:24px;cursor:pointer;color:var(--paper);background:none;border:none;line-height:1;padding:4px 8px;}
+  .x:hover{color:var(--gold);}
+  .modal-body{padding:22px 26px;overflow:auto;}
+  .modal-body p{font-size:15px;color:var(--muted);margin:0 0 14px;line-height:1.5;}
+  #exportText{width:100%;height:320px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.55;background:#fbf8ef;border:1px solid #cdc6b4;border-radius:3px;padding:16px;color:#26241f;resize:vertical;}
+  .modal-foot{padding:18px 26px;border-top:1px solid #d7d0be;display:flex;gap:12px;flex-wrap:wrap;background:var(--paper-2);}
+
+  footer{padding:30px 40px 50px;text-align:center;background:var(--ink);color:#7d786c;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;}
+  footer b{color:var(--gold);}
+
+  @media (max-width:640px){
+    header,.status,.toolbar,.intro,.section-label,.cats,.suggest{padding-left:20px;padding-right:20px;}
+    .srow{grid-template-columns:1fr;}
+    .sdel{width:100%;align-self:auto;}
+    .ghost .sdel{display:none;}
+    .scale{margin-left:0;}
+    .cat-hint,.scale-ends,.catnote{margin-left:0;}
+    .catnote{width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <header>
+    <div class="barcode"></div>
+    <p class="kicker">Pre-Brief · Category Review</p>
+    <h1>Category <span class="mute">Review</span></h1>
+    <p class="subhead">Before the full ranking begins, weigh in on the proposed categories. Rate how essential each one is, flag anything that should change, and propose your own. Your feedback shapes the final dossier.</p>
+    <div class="clearance">Stage: <b>1 of 2 — Calibration</b></div>
+  </header>
+
+  <div class="status">
+    <span class="lbl"><b id="ratedCount">0</b> of 20 categories rated</span>
+    <div class="track"><i id="trackFill"></i></div>
+    <span class="lbl"><b id="suggCount">0</b> suggested</span>
+    <span class="saved" id="savedFlag">✓ Saved</span>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn primary" id="exportBtn">⎙ Export Feedback</button>
+    <button class="btn danger" id="resetBtn">Reset</button>
+  </div>
+
+  <div class="intro">
+    <p>For each proposed category, rate <b>1–7</b> on how strongly it belongs in the final ranking. Add a quick note if you'd reword, split, merge, or cut it. Then suggest any categories you think are missing.</p>
+    <div class="legend">
+      <span><b>1</b> — Drop it</span>
+      <span><b>4</b> — Neutral / maybe</span>
+      <span><b>7</b> — Essential, keep</span>
+    </div>
+    <div class="namefield">
+      <label for="reviewerName">Your name or handle <span class="req">*</span> — so I know whose feedback this is</label>
+      <input type="text" id="reviewerName" placeholder="e.g. James, or @yourhandle" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="section-label">Proposed Categories</div>
+  <div class="cats" id="cats"></div>
+
+  <div class="section-label">Your Category Suggestions</div>
+  <div class="suggest" id="suggest"></div>
+
+  <footer>Local autosave enabled · No data leaves this device · <b>Send the export back when done</b></footer>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Export <span>Feedback</span></h2>
+      <button class="x" id="closeModal">×</button>
+    </div>
+    <div class="modal-body">
+      <p><b>To send this back:</b> tap <b>Copy to Clipboard</b> below, then paste it straight into a reply email or message. (That's the easy way — no file needed.) The package lists every rating, your notes, and any categories you proposed.</p>
+      <textarea id="exportText" readonly></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn primary" id="copyBtn">⧉ Copy to Clipboard</button>
+      <button class="btn" id="downloadBtn">⤓ Download .txt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = [
+  {key:"opening_credits", name:"Opening Credits", hint:"the title-sequence design, visuals, motifs"},
+  {key:"soundtrack", name:"Soundtrack", hint:"the theme song / vocal track"},
+  {key:"score", name:"Score (if different from soundtrack)", hint:"the instrumental film score"},
+  {key:"bond_actor", name:"Bond Actor", hint:"the performance in the title role"},
+  {key:"bond_girl", name:"Bond Girl", hint:"the lead female character / performance"},
+  {key:"combo", name:"Bond Actor & Bond Girl Combo", hint:"the on-screen pairing / chemistry"},
+  {key:"bond_girl_name", name:"Bond Girl Name", hint:"the character's name itself"},
+  {key:"innuendo_dialogue", name:"Innuendo: Dialogue", hint:"a specific line or exchange"},
+  {key:"innuendo_names", name:"Innuendo: Names", hint:"a suggestively-named character"},
+  {key:"villain", name:"Villain", hint:"the antagonist / performance"},
+  {key:"villain_name", name:"Villain Name", hint:"the antagonist's name itself"},
+  {key:"q", name:"Q", hint:"the quartermaster's appearance / scene"},
+  {key:"m", name:"M", hint:"the M performance / scene"},
+  {key:"character_arc", name:"Bond Actor's Character Arc", hint:"Bond's development within the film"},
+  {key:"macguffin", name:"MacGuffin", hint:"the central object / plot device"},
+  {key:"car", name:"Car", hint:"the featured vehicle"},
+  {key:"technology", name:"Technology", hint:"gadgets / tech beyond the car"},
+  {key:"gunplay", name:"Gunplay Sequences", hint:"a standout shooting set-piece"},
+  {key:"fight", name:"Fight Sequences", hint:"a standout hand-to-hand / combat scene"},
+  {key:"evolution", name:"Evolution of the Bond Medium", hint:"how this film advanced the franchise"}
+];
+
+const STORE_KEY = "bond_catreview_v1";
+let state = load();
+
+function load(){
+  try{ const raw=localStorage.getItem(STORE_KEY); if(raw) return JSON.parse(raw); }catch(e){}
+  const s={name:"",ratings:{},notes:{},suggestions:[]};
+  CATEGORIES.forEach(c=>{ s.ratings[c.key]=0; s.notes[c.key]=""; });
+  return s;
+}
+let saveTimer=null;
+function save(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  const flag=document.getElementById('savedFlag');
+  flag.classList.add('show'); clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>flag.classList.remove('show'),1400);
+}
+
+function renderCats(){
+  const root=document.getElementById('cats'); root.innerHTML='';
+  CATEGORIES.forEach((c,ci)=>{
+    const el=document.createElement('div'); el.className='cat';
+    const r=state.ratings[c.key]||0;
+    el.innerHTML=`
+      <div class="cat-top">
+        <span class="cat-num">${String(ci+1).padStart(2,'0')}</span>
+        <span class="cat-title">${c.name}</span>
+      </div>
+      <div class="cat-hint">${c.hint}</div>
+      <div class="scale" data-cat="${c.key}">
+        ${[1,2,3,4,5,6,7].map(n=>`<div class="pip ${r===n?'sel':''}" data-n="${n}">${n}</div>`).join('')}
+      </div>
+      <div class="scale-ends"><span>Drop it</span><span>Essential</span></div>
+      <textarea class="catnote" data-cat="${c.key}" placeholder="Optional: reword, split, merge, or cut? Any thoughts…">${(state.notes[c.key]||'').replace(/</g,'&lt;')}</textarea>`;
+    root.appendChild(el);
+  });
+  document.querySelectorAll('.scale .pip').forEach(p=>{
+    p.addEventListener('click',e=>{
+      const cat=e.target.parentElement.dataset.cat;
+      const n=parseInt(e.target.dataset.n);
+      state.ratings[cat]= (state.ratings[cat]===n)?0:n; // tap again to clear
+      e.target.parentElement.querySelectorAll('.pip').forEach(x=>x.classList.toggle('sel',parseInt(x.dataset.n)===state.ratings[cat]));
+      save(); updateProgress();
+    });
+  });
+  document.querySelectorAll('.catnote').forEach(t=>{
+    t.addEventListener('input',e=>{ state.notes[e.target.dataset.cat]=e.target.value; save(); });
+  });
+}
+
+/* ---- SUGGESTIONS: progressive field-row pattern ---- */
+function renderSuggest(){
+  const root=document.getElementById('suggest'); root.innerHTML='';
+  state.suggestions.forEach((s,i)=>root.appendChild(makeRow(s,i,false)));
+  root.appendChild(makeRow({name:"",desc:"",priority:""}, state.suggestions.length, true));
+  const hint=document.createElement('div');
+  hint.className='add-hint'; hint.textContent='Start typing in the empty row to add a category — a new blank row appears automatically.';
+  root.appendChild(hint);
+  updateProgress();
+}
+function makeRow(s,i,ghost){
+  const row=document.createElement('div');
+  row.className='srow'+(ghost?' ghost':'');
+  row.innerHTML=`
+    <div class="sname">
+      <label>Category Name</label>
+      <input type="text" data-i="${i}" data-f="name" value="${(s.name||'').replace(/"/g,'&quot;')}" placeholder="${ghost?'+ Add a category…':'Category name'}">
+    </div>
+    <div class="spri">
+      <label>Priority</label>
+      <select data-i="${i}" data-f="priority">
+        <option value="">— set —</option>
+        <option ${s.priority==='Essential'?'selected':''}>Essential</option>
+        <option ${s.priority==='Nice to have'?'selected':''}>Nice to have</option>
+        <option ${s.priority==='Just an idea'?'selected':''}>Just an idea</option>
+      </select>
+    </div>
+    <button class="sdel" data-i="${i}" title="Remove">×</button>
+    <div style="grid-column:1/-1">
+      <label>What it measures / why</label>
+      <textarea data-i="${i}" data-f="desc" placeholder="${ghost?'(optional) describe what this category would rank…':'Describe what this category would rank…'}">${(s.desc||'').replace(/</g,'&lt;')}</textarea>
+    </div>`;
+  row.querySelectorAll('input,textarea,select').forEach(inp=>{
+    inp.addEventListener('input',handleSuggestInput);
+    if(inp.tagName==='SELECT') inp.addEventListener('change',handleSuggestInput);
+  });
+  row.querySelector('.sdel').addEventListener('click',e=>{
+    const idx=parseInt(e.target.dataset.i);
+    if(!isNaN(idx) && idx<state.suggestions.length){ state.suggestions.splice(idx,1); save(); renderSuggest(); }
+  });
+  return row;
+}
+function handleSuggestInput(e){
+  const i=parseInt(e.target.dataset.i), f=e.target.dataset.f;
+  const isGhost = i>=state.suggestions.length;
+  if(isGhost){
+    if(e.target.value.trim()===''){ return; }
+    state.suggestions.push({name:"",desc:"",priority:""});
+    state.suggestions[i][f]=e.target.value;
+    save(); renderSuggest();
+    // refocus the field the user was typing in
+    const sel=`.srow [data-i="${i}"][data-f="${f}"]`;
+    const node=document.querySelector(sel);
+    if(node){ node.focus(); if(node.setSelectionRange){const v=node.value;node.setSelectionRange(v.length,v.length);} }
+  }else{
+    state.suggestions[i][f]=e.target.value;
+    save(); updateProgress();
+  }
+}
+
+function updateProgress(){
+  const rated=CATEGORIES.filter(c=>state.ratings[c.key]>0).length;
+  const sugg=state.suggestions.filter(s=>(s.name||'').trim()).length;
+  document.getElementById('ratedCount').textContent=rated;
+  document.getElementById('suggCount').textContent=sugg;
+  document.getElementById('trackFill').style.width=(rated/20*100)+'%';
+}
+
+document.getElementById('resetBtn').onclick=()=>{
+  if(confirm('Reset all ratings, notes, and suggestions?')){
+    localStorage.removeItem(STORE_KEY); state=load(); renderCats(); renderSuggest();
+  }
+};
+
+/* ---- EXPORT ---- */
+function buildExport(){
+  const L=[];
+  L.push("=========================================");
+  L.push("  CATEGORY REVIEW — FEEDBACK PACKAGE");
+  L.push("=========================================");
+  L.push(`From: ${(state.name||'(unnamed)').trim()}`);
+  const rated=CATEGORIES.filter(c=>state.ratings[c.key]>0).length;
+  L.push(`${rated} of 20 categories rated · ${state.suggestions.filter(s=>(s.name||'').trim()).length} new categories suggested.`);
+  L.push("Scale: 1 = drop it · 4 = neutral · 7 = essential.");
+  L.push("");
+  L.push("-----------------------------------------");
+  L.push("RATINGS ON PROPOSED CATEGORIES");
+  L.push("-----------------------------------------");
+  CATEGORIES.forEach((c,ci)=>{
+    const r=state.ratings[c.key]||0;
+    L.push(`${String(ci+1).padStart(2,'0')}. ${c.name} — ${r?r+'/7':'(not rated)'}`);
+    const n=(state.notes[c.key]||'').trim();
+    if(n) L.push(`     Note: ${n}`);
+  });
+
+  // quick triage summary
+  const keep=CATEGORIES.filter(c=>state.ratings[c.key]>=6);
+  const cut=CATEGORIES.filter(c=>state.ratings[c.key]>0 && state.ratings[c.key]<=2);
+  L.push("");
+  L.push("-----------------------------------------");
+  L.push("AT A GLANCE");
+  L.push("-----------------------------------------");
+  L.push("Strong keep (6-7): " + (keep.length?keep.map(c=>c.name).join(", "):"none"));
+  L.push("Candidates to cut (1-2): " + (cut.length?cut.map(c=>c.name).join(", "):"none"));
+
+  const sugg=state.suggestions.filter(s=>(s.name||'').trim());
+  L.push("");
+  L.push("-----------------------------------------");
+  L.push("SUGGESTED NEW CATEGORIES");
+  L.push("-----------------------------------------");
+  if(sugg.length){
+    sugg.forEach((s,i)=>{
+      L.push(`${i+1}. ${s.name.trim()}${s.priority?'  ['+s.priority+']':''}`);
+      if((s.desc||'').trim()) L.push(`     ${s.desc.trim()}`);
+    });
+  }else{
+    L.push("(none)");
+  }
+  L.push("");
+  L.push("— End of feedback —");
+  return L.join("\n");
+}
+
+const modalBg=document.getElementById('modalBg');
+document.getElementById('exportBtn').onclick=()=>{
+  if(!(state.name||'').trim()){
+    const ni=document.getElementById('reviewerName');
+    ni.classList.add('missing');
+    ni.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>ni.focus(),350);
+    return;
+  }
+  document.getElementById('exportText').value=buildExport(); modalBg.classList.add('show');
+};
+document.getElementById('closeModal').onclick=()=>modalBg.classList.remove('show');
+modalBg.addEventListener('click',e=>{if(e.target===modalBg)modalBg.classList.remove('show');});
+document.getElementById('copyBtn').onclick=async()=>{
+  const ta=document.getElementById('exportText'); ta.select(); ta.setSelectionRange(0,99999);
+  try{ await navigator.clipboard.writeText(ta.value); }catch(e){ document.execCommand('copy'); }
+  const b=document.getElementById('copyBtn'); const old=b.textContent; b.textContent='✓ Copied'; setTimeout(()=>b.textContent=old,1500);
+};
+document.getElementById('downloadBtn').onclick=()=>{
+  const blob=new Blob([buildExport()],{type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='bond-category-feedback.txt'; a.click(); URL.revokeObjectURL(a.href);
+};
+
+renderCats();
+renderSuggest();
+
+// name field
+const nameInput=document.getElementById('reviewerName');
+nameInput.value=state.name||'';
+nameInput.addEventListener('input',()=>{ state.name=nameInput.value; if(nameInput.value.trim())nameInput.classList.remove('missing'); save(); });
+</script>
+</body>
+</html>
